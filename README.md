@@ -10,18 +10,23 @@ This guide will show you how to install and configure batmon. You need to login 
 
 Dispmanx is used to create a layer on the screen where the battey icon is displayed. It needs to be installed first with this set of commands:
 
-1. `cd ~`
-2. `git clone https://github.com/AndrewFromMelbourne/raspidmx.git`
-3. `cd raspidmx`
-4. `make`
-5. `sudo cp /home/pi/raspidmx/lib/libraspidmx.so.1 /usr/lib`
+1. `cd ~
+2. `mkdir develop`
+3. `cd develop``
+4. `git clone https://github.com/AndrewFromMelbourne/raspidmx.git`
+5. `cd raspidmx`
+6. `make`
+7. `sudo cp /home/pi/raspidmx/lib/libraspidmx.so.1 /usr/lib`
+8. `git clone https://github.com/trngaje/batguiserver.git
+9. `cd batguiserver`
+10. `make`
 
 ### batmon ###
 
 Install batmon with these commands:
 
-1. `cd ~`
-2. `git clone https://github.com/floppes/batmon.git`
+1. `cd ~/develop`
+2. `git clone https://github.com/trngaje/batmon.git`
 3. `cd batmon`
 
 ## Configuration ##

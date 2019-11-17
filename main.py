@@ -5,32 +5,18 @@ import time
 import signal
 import datetime
 import os
-from subprocess import check_output, call, Popen
+import subprocess
+
 from config import *
 from mcp3551 import MCP3551
 from mcp3001 import MCP3001
 from mcp3008 import MCP3008
+from mcp3208 import MCP3208
+from noadc import NOADC
 
-def draw_icon(layer, icon):
-	Popen(PNGVIEWPATH + "/pngview -b 0 -l " + layer + " -x " + str(ICONX) + " -y " + str(ICONY) + " " + ICONPATH + "/" + icon + " &", cwd=os.path.dirname(os.path.realpath(__file__)), shell=True)
+p = subprocess.Popen([BATGUISERVERPATH+"/batguiserver", "-s "+str(ICONSIZE), "-x "+str(ICONX), "-y "+str(ICONY), "-p"], 
+                     stdin=subprocess.PIPE)
 
-def change_icon(percent):
-	if (ICON != 1):
-		return
-
-	draw_icon("3000" + percent, "battery" + percent + ".png")
-
-	if (DEBUGMSG == 1):
-		print("Changed battery icon to " + percent + "%")
-
-	out = check_output("ps aux | grep pngview | awk '{ print $2 }'", shell=True)
-	nums = out.split('\n')
-	i = 0
-
-	for num in nums:
-		i += 1
-		if (i == 1):
-			call("sudo kill " + num, shell=True)
 
 def change_led(led):
 	if (LEDS != 1):
@@ -49,7 +35,7 @@ def change_led(led):
 
 def end_process(signalnum = None, handler = None):
 	GPIO.cleanup()
-	call("sudo killall pngview", shell=True);
+	p.stdin.write('[exit]')
 	exit(0)
 
 status = 0
@@ -65,6 +51,10 @@ elif (ADC == "MCP3001"):
 	adc = MCP3001(SPIMISO, SPIMOSI, SPICLK, SPICS)
 elif (ADC == "MCP3008"):
 	adc = MCP3008(SPIMISO, SPIMOSI, SPICLK, SPICS, ADCCHANNEL)
+elif (ADC == "MCP3228"):
+	adc = MCP3228(SPIMISO, SPIMOSI, SPICLK, SPICS, ADCCHANNEL)
+elif (ADC == "NOADC"):
+    adc = NOADC(SPIMISO, SPIMOSI, SPICLK, SPICS, ADCCHANNEL)
 else:
 	print("Unknown ADC type " + str(ADC) + "! Please set ADC in config.py to one of the supported types.")
 	exit(0)
@@ -103,19 +93,32 @@ if (LEDS == 1):
 	GPIO.output(GOODVOLTPIN, GPIO.LOW)
 	GPIO.output(LOWVOLTPIN, GPIO.LOW)
 
-draw_icon("299999", "blank.png")
-
 count = 0
 
 if (CSVOUT == 1):
 	print("#;Timestamp;Date and time;Raw value;Voltage")
 
+i = 0
+battery = [ADC0, ADC25, ADC50, ADC75, ADC100]
+
+
 while True:
 	# measure three times and use the average
-	ret1 = adc.read_value()
-	ret2 = adc.read_value()
-	ret3 = adc.read_value()
-	ret = (ret1 + ret2 + ret3) / 3
+	if (ADC == "NOADC"):
+ 		ret = battery[i]
+
+		i = i + 1
+
+		if (i > 4):
+			i = 0
+	else:
+		ret1 = adc.read_value()
+		ret2 = adc.read_value()
+		ret3 = adc.read_value()
+		ret = (ret1 + ret2 + ret3) / 3
+
+
+
 	voltage = ((HIGHRESVAL + LOWRESVAL) * ret * (ADCVREF / adc.get_resolution())) / HIGHRESVAL
 
 	if (CSVOUT == 1):
@@ -126,32 +129,34 @@ while True:
 
 	if (ret < ADC0):
 		if (status != 0):
-			change_icon("0")
 			change_led("red")
+			p.stdin.write('[b:0]')
+
 
 		status = 0
 	elif (ret < ADC25):
 		if (status != 25):
 			change_led("red")
-			change_icon("25")
+			p.stdin.write('[b:25]')
+
 
 		status = 25
 	elif (ret < ADC50):
 		if (status != 50):
 			change_led("green")
-			change_icon("50")
-
+			p.stdin.write('[b:50]')
 		status = 50
 	elif (ret < ADC75):
 		if (status != 75):
 			change_led("green")
-			change_icon("75")
+			p.stdin.write('[b:75]')
+
 
 		status = 75
 	else:
 		if (status != 100):
 			change_led("green")
-			change_icon("100")
+			p.stdin.write('[b:100]')
 
 		status = 100
 
