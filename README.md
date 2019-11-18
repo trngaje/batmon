@@ -1,23 +1,19 @@
 # batmon #
 
-This is a set of Python scripts which use an analog-to-digital converter (ADC) to measure a battery's voltage and display a status icon on the screen. It supports the Microchip ADCs MCP3001, MCP3008 and MCP3551. These scripts are intended to be used on a Raspberry Pi running [RetroPie v4.4](https://retropie.org.uk). This project is based on [gbzbatterymonitor](https://github.com/joachimvenaas/gbzbatterymonitor).
-
-## Installation ##
-
-This guide will show you how to install and configure batmon. You need to login via SSH or open a terminal by pressing CTRL+ALT+F3 to enter the commands.
+This is a set of Python scripts which use an analog-to-digital converter (ADC) to measure a battery's voltage and display a status icon on the screen. It supports the Microchip ADCs MCP3001, MCP3008, MCP3208 and MCP3551. These scripts are intended to be used on a Raspberry Pi running. This project is based on (https://github.com/floppes/batmon).
 
 ### Dispmanx ###
 
 Dispmanx is used to create a layer on the screen where the battey icon is displayed. It needs to be installed first with this set of commands:
 
-1. `cd ~
+1. `cd ~`
 2. `mkdir develop`
-3. `cd develop``
+3. `cd develop`
 4. `git clone https://github.com/AndrewFromMelbourne/raspidmx.git`
 5. `cd raspidmx`
 6. `make`
 7. `sudo cp /home/pi/raspidmx/lib/libraspidmx.so.1 /usr/lib`
-8. `git clone https://github.com/trngaje/batguiserver.git
+8. `git clone https://github.com/trngaje/batguiserver.git`
 9. `cd batguiserver`
 10. `make`
 
