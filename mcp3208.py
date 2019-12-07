@@ -9,7 +9,7 @@ class MCP3208(ADC):
 		self._channel = channel
 
 	def setup_pins(self):
-		GPIO.setmode(GPIO.BOARD)
+		GPIO.setmode(GPIO.BCM)
 		GPIO.setwarnings(False)
 
 		GPIO.setup(self._miso, GPIO.IN)

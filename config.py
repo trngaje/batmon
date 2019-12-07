@@ -3,9 +3,6 @@
 # Path to batguiserver (raspidmx)
 BATGUISERVERPATH = "/home/pi/develop/raspidmx/batguiserver"
 
-# Path to icon set
-#ICONPATH = "icons/small"
-
 # Show battery icon
 ICON = 1
 
@@ -16,11 +13,12 @@ LEDS = 0
 ICONSIZE = 2
 
 # Icon location
-ICONX = 270
+#ICONX = 270
+ICONX = 750
 ICONY = 1
 
-# ADC type (MCP3001, MCP3008, MCP3228 or MCP3551, NOADC to display gui test)
-ADC = "NOADC"
+# ADC type (MCP3001, MCP3008, MCP3208 or MCP3551, NOADC to display gui test)
+ADC = "MCP3208"
 
 # ADC channel to use (from 0 to 7, only relevant for MCP3008)
 ADCCHANNEL = 0
@@ -42,11 +40,11 @@ VOLT50 = 3.63
 VOLT25 = 3.5
 VOLT0 = 3.2
 
-# Value (in ohms) of the lower resistor from the voltage divider, connected to the ground line (1 if no voltage divider)
-LOWRESVAL = 10000
+# Value (in ohms) of the lower resistor from the voltage divider, connected to the positive line (1 if no voltage divider)
+LOWRESVAL = 22000
 
-# Value (in ohms) of the higher resistor from the voltage divider, connected to the positive line (0 if no voltage divider)
-HIGHRESVAL = 10000
+# Value (in ohms) of the higher resistor from the voltage divider, connected to the negative (gnd) line (0 if no voltage divider)
+HIGHRESVAL = 6500
 
 # ADC voltage reference (3.3V for Raspberry Pi)
 ADCVREF = 3.3

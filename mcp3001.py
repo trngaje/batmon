@@ -5,7 +5,7 @@ from adc import ADC
 
 class MCP3001(ADC):
 	def setup_pins(self):
-		GPIO.setmode(GPIO.BOARD)
+		GPIO.setmode(GPIO.BCM)
 		GPIO.setwarnings(False)
 
 		GPIO.setup(self._miso, GPIO.IN)
